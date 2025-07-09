@@ -1,4 +1,3 @@
-import {Vote} from "lucide-react";
 import {ThemeToggle} from "@/components/theme-toggle";
 import {Logo} from "@/components/logo";
 
