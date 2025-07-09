@@ -3,7 +3,7 @@
 import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,} from "@/components/ui/sheet";
 import {Button} from "@/components/ui/button";
 import {Menu, Vote} from "lucide-react";
-import {CreatePollButton} from "@/components/create-poll-button";
+import {CreatePollButton} from "@/components/create-poll/create-poll-button";
 import {ThemeToggle} from "@/components/theme-toggle";
 import {SearchInput} from "@/components/search-input";
 import {Label} from "@/components/ui/label";
@@ -44,7 +44,7 @@ export function MobileMenu() {
                         <Label className="text-sm font-medium text-muted-foreground">
                             Criar enquete
                         </Label>
-                        <CreatePollButton/>
+                        <CreatePollButton className="w-full"/>
                     </div>
                 </div>
 

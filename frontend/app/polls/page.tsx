@@ -1,4 +1,4 @@
-import {InternalHeader} from "@/components/internal-header";
+import {InternalHeader} from "@/components/header/internal-header";
 
 export default function Polls() {
     return (<div>

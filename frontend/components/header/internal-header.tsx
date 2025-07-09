@@ -2,9 +2,9 @@
 
 import {ThemeToggle} from "@/components/theme-toggle";
 import {SearchInput} from "@/components/search-input";
-import {CreatePollButton} from "@/components/create-poll-button";
+import {CreatePollButton} from "@/components/create-poll/create-poll-button";
 import {Logo} from "@/components/logo";
-import {MobileMenu} from "@/components/mobile-menu";
+import {MobileMenu} from "@/components/header/mobile-menu";
 import {LogoutButton} from "@/components/logout-button";
 import {useRouter} from "next/navigation";
 
