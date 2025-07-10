@@ -9,6 +9,7 @@ export const useCreatePollForm = () => {
         defaultValues: {
             title: "",
             description: "",
+            options: [{ text: "" }, { text: "" }],
         }
     });
 };
