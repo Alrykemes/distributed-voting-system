@@ -6,9 +6,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import {CreatePollForm} from "@/components/create-poll/create-poll-form";
+import { CreatePollForm } from "@/components/create-poll/create-poll-form";
+import React from "react";
 
-export function CreatePollDialog() {
+export function CreatePollDialog(): React.ReactNode {
     return (
         <DialogContent>
             <DialogHeader>

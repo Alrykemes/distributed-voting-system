@@ -1,16 +1,17 @@
 "use client";
 
-import {Dialog, DialogTrigger,} from "@/components/ui/dialog";
-import {Button} from "@/components/ui/button";
-import {Plus} from "lucide-react";
-import {CreatePollDialog} from "@/components/create-poll/create-poll-dialog";
-import {cn} from "@/lib/utils"
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { CreatePollDialog } from "@/components/create-poll/create-poll-dialog";
+import { cn } from "@/lib/utils"
+import React from "react";
 
 interface CreatePollButtonProps {
     className?: string
 }
 
-export function CreatePollButton({className}: CreatePollButtonProps) {
+export function CreatePollButton({className}: CreatePollButtonProps): React.ReactNode {
     return (
         <Dialog>
             <DialogTrigger asChild>

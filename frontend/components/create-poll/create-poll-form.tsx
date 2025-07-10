@@ -1,21 +1,31 @@
 "use client";
 
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {useCreatePollForm} from "@/hooks/useCreatePollForm";
-import {CreatePollSchemaType} from "@/types/create-poll";
-import {api} from "@/lib/api";
-import {Input} from "@/components/ui/input";
-import {useState} from "react";
-import {Textarea} from "@/components/ui/textarea";
-import {Button} from "@/components/ui/button";
+import { useCreatePollForm } from "@/hooks/useCreatePollForm";
+import { CreatePollSchemaType } from "@/types/create-poll";
+import { api } from "@/lib/api";
+import React, { useState } from "react";
 import { toast } from "sonner"
+import FormWrapper from "@/components/form/form-wrapper";
+import { InputField } from "@/components/form/input-field";
+import { TextAreaField } from "@/components/form/text-area-field";
+import { Button } from "@/components/ui/button";
+import {useFieldArray, UseFormReturn } from "react-hook-form";
+import { MyLabel } from "@/components/my-label";
+import { PollOptionField } from "@/components/form/poll-option-field";
+import { Plus } from "lucide-react";
 
-export function CreatePollForm() {
+export function CreatePollForm(): React.ReactNode {
     const [isLoading, setIsLoading] = useState(false);
+    const form: UseFormReturn<CreatePollSchemaType> = useCreatePollForm();
 
-    const form = useCreatePollForm();
+    const { control } = form;
 
-    async function onSubmit(data: CreatePollSchemaType) {
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "options",
+    })
+
+    async function onSubmit(data: CreatePollSchemaType): Promise<void> {
         try {
             setIsLoading(true);
             const response = await api.post("polls/create", data)
@@ -33,51 +43,36 @@ export function CreatePollForm() {
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="title"
-                    render={({field}) => (
-                        <FormItem>
-                            <FormLabel>Título da enquete</FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="Pizza vs Hamburguer"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                {field.value?.length || 0}/100 caracteres.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="description"
-                    render={({field}) => (
-                        <FormItem>
-                            <FormLabel>Descrição (Opcional)</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    className="resize-none"
-                                    placeholder="Adione mais contexto a sua enquete"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                {field.value?.length || 0}/500 caracteres.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-                <Button type="submit" disabled={isLoading} className="h-12 w-full text-center">
-                    {isLoading ? "Criando..." : "Criar Enquete"}
+        <FormWrapper form={form} onSubmitAction={onSubmit} className="space-y-8">
+            <InputField control={form.control} name="title" label="Título da enquete"
+                        placeholder="Pizza vs Hamburguer." maxLength={100}/>
+            <TextAreaField control={form.control} name="description" label="Descrição (Opcional)"
+                           placeholder="Adione mais contexto a sua enquete."/>
+            <div className="space-y-4">
+                <MyLabel label="Opções"/>
+                {fields.map((field, index: number): React.ReactNode => (
+                    <PollOptionField
+                        control={form.control}
+                        index={index}
+                        onRemoveAction={(): void => remove(index)}
+                        disableRemove={fields.length <= 2}
+                    />
+                ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={(): void => append({ text: "" })}
+                    disabled={fields.length >= 4}
+                    className="gap-2"
+                >
+                    <Plus className="h-4 w-4" />
+                    Adicionar opção
                 </Button>
-            </form>
-        </Form>
+            </div>
+            <Button type="submit" disabled={isLoading} className="h-12 w-full text-center">
+                {isLoading ? "Criando..." : "Criar Enquete"}
+            </Button>
+        </FormWrapper>
     );
 }
