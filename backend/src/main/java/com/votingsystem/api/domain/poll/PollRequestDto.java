@@ -1,4 +1,6 @@
 package com.votingsystem.api.domain.poll;
 
-public record PollRequestDto() {
-}
+public record PollRequestDto(
+        String title,
+        String description
+) { }

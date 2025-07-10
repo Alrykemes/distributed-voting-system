@@ -1,6 +1,5 @@
-package com.votingsystem.api.domain.poll;
+package com.votingsystem.api.domain.user;
 
-import com.votingsystem.api.domain.user.UserPoll;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +11,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "polls")
-public class Poll {
+@Document(collection = "users")
+public class UserPoll {
     @Id()
     private String id;
-    private String title;
-    private String description;
-    private UserPoll owner;
-    private Long positiveNumberOfVotes;
-    private Long negativeNumberOfVotes;
+
+    private String googleId;
+    private String name;
+    private String email;
+    private String picture;
 }
