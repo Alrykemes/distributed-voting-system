@@ -6,7 +6,7 @@ import {Menu, Vote} from "lucide-react";
 import {CreatePollButton} from "@/components/create-poll/create-poll-button";
 import {ThemeToggle} from "@/components/theme-toggle";
 import {SearchInput} from "@/components/search-input";
-import {Label} from "@/components/ui/label";
+import {Label} from "@/components/label";
 import {LogoutButton} from "@/components/logout-button";
 import {useRouter} from "next/navigation";
 
@@ -35,30 +35,22 @@ export function MobileMenu() {
 
                 <div className="flex-1 space-y-8 pt-6">
                     <div className="space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">
-                            Pesquisar enquetes
-                        </Label>
+                        <Label label="Pesquisar enquetes"/>
                         <SearchInput/>
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">
-                            Criar enquete
-                        </Label>
+                        <Label label="Criar enquete"/>
                         <CreatePollButton className="w-full"/>
                     </div>
                 </div>
 
                 <div className="flex justify-between pt-6 border-t border-muted">
                     <div className="text-center space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">
-                            Tema
-                        </Label>
+                        <Label label="Tema"/>
                         <ThemeToggle/>
                     </div>
                     <div className="text-center space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">
-                            Logout
-                        </Label>
+                        <Label label="Logout"/>
                         <LogoutButton onLogoutAction={handleLogout}/>
                     </div>
                 </div>
