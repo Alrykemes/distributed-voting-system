@@ -1,7 +1,10 @@
 package com.votingsystem.api.controller;
 
+import com.votingsystem.api.domain.user.UserPoll;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,17 +19,22 @@ import java.util.List;
 
 @Controller()
 @RequestMapping("/polls")
+@RequiredArgsConstructor
 public class PollController {
 
-    private PollService service;
-
-    public PollController(PollService service) {
-        this.service = service;
-    }
+    private final PollService service;
 
     @GetMapping()
-    public List<Poll> getAllPolls() {
-        return service.getAll();
+    public ResponseEntity<List<Poll>> getAllPolls() {
+        try {
+            List<Poll> polls = service.getAll();
+            return ResponseEntity.ok(polls);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/{id}")
@@ -43,9 +51,10 @@ public class PollController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Poll> createPoll(@RequestBody PollRequestDto dto) {
+    public ResponseEntity<Poll> createPoll(Authentication authentication, @RequestBody PollRequestDto dto) {
         try {
-            Poll poll = service.createPoll(dto);
+            UserPoll user = (UserPoll) authentication.getPrincipal();
+            Poll poll = service.createPoll(dto, user);
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
@@ -61,9 +70,10 @@ public class PollController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Poll> updatePoll(@PathVariable String id, @RequestBody PollRequestDto dto) {
+    public ResponseEntity<Poll> updatePoll(Authentication authentication, @PathVariable String id, @RequestBody PollRequestDto dto) {
         try {
-            Poll poll = service.updatePoll(id, dto);
+            UserPoll user = (UserPoll) authentication.getPrincipal();
+            Poll poll = service.updatePoll(id, dto, user);
             return ResponseEntity.ok(poll);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

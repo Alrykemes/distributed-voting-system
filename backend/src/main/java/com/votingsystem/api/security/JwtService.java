@@ -5,7 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.votingsystem.api.domain.user.UserPoll;
 import jakarta.annotation.PostConstruct;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,8 +41,6 @@ public class JwtService {
     public String extractEmail(String token) {
         try {
             DecodedJWT decodedJWT = verifier.verify(token);
-            System.out.println("token que chega no jwtservice " + token);
-            System.out.println("email que ta no subject e foi extraido e vai ser retornado " + decodedJWT.getSubject());
             return decodedJWT.getSubject();
         } catch (JWTVerificationException e) {
             return null;

@@ -1,19 +1,30 @@
 package com.votingsystem.api.services;
 
+import com.votingsystem.api.domain.poll.Poll;
 import com.votingsystem.api.domain.user.UserPoll;
+import com.votingsystem.api.repository.PollRepository;
 import com.votingsystem.api.repository.UserPollRepository;
-import com.votingsystem.api.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UserPollService {
 
     private final UserPollRepository userPollRepository;
-    private final JwtService jwtService;
+    private final PollRepository pollRepository;
 
-    public UserPoll getById(String id) {
-        return userPollRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    public UserPoll delete(UserPoll userPoll) throws Exception {
+        UserPoll userDeleted = userPollRepository.findById(userPoll.getId()).orElseThrow(() -> new Exception("User not found"));
+        userPollRepository.delete(userPoll);
+        return userDeleted;
+    }
+
+    public List<Poll> deletePolls(UserPoll userPoll) throws Exception {
+        List<Poll> pollsDeleted = pollRepository.findAllByOwner(userPoll);
+        pollRepository.deleteAllByOwner(userPoll);
+        return pollsDeleted;
     }
 }
