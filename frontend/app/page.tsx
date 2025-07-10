@@ -1,4 +1,4 @@
-import {Header} from "@/components/header";
+import {Header} from "@/components/header/header";
 import {InfoCard} from "@/components/info-card";
 import {BarChart3, LogIn, Users, Vote} from "lucide-react";
 import {Button} from "@/components/ui/button";
@@ -34,7 +34,7 @@ export default function Home() {
                     />
                 </div>
 
-                <Link href="/home">
+                <Link href="/polls">
                     <Button className="flex h-12 gap-2 px-6 items-center">
                         <LogIn className="w-5 h-5"/>
                         <span>Entrar com Google</span>
