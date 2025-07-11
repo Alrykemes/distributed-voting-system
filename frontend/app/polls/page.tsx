@@ -4,56 +4,55 @@ import { InternalHeader } from "@/components/header/internal-header";
 import { Poll } from "@/components/poll";
 import { TrendingUp } from "lucide-react";
 import { MyLabel } from "@/components/my-label";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PollType } from "@/types/poll";
 import { api } from "@/lib/api";
 import { PollOption } from "@/types/optionPoll";
+import { tr } from "zod/v4/locales";
 
 export default function Polls(): React.ReactNode {
 
     const searchParams = useSearchParams();
     const queryToken = searchParams.get('token');
     const router = useRouter();
-
+    
+    const [logged, setLogged] = useState<boolean>(false);
+    const isFirstRender = useRef(true)
+    
     useEffect(() => {
-        const storageToken = localStorage.getItem('auth-token');
-
         if (queryToken) {
             localStorage.setItem("auth-token", queryToken);
             router.replace('/polls', undefined);
+            setLogged(true);
         }
+        
+        const storageToken = localStorage.getItem('auth-token');
 
         if (!storageToken) {
-            router.push("/")
+            router.push("/");
+        } else {
+            setLogged(true);
         }
-
-        setTimeout(() => {
-            fetchTrendsPolls();
-        }, 300)
     }, [router])
 
-    const [getTrends, setGetTrends] = useState<boolean>(false);
     const [trendsPolls, setTrendsPolls] = useState<PollType[]>([]);
 
     const fetchTrendsPolls = async () => {
         const res = await api.get("/polls/get-trends")
-        console.log(res.data);
         setTrendsPolls(res.data);
-        setGetTrends(true);
     }
 
     useEffect(() => {
-        console.log(trendsPolls);
-        // mock poll options
-        trendsPolls.map((poll) => {
-            const option1: PollOption = {id: "1", text: "Yes", votes: 5}
-            const option2: PollOption = {id: "1", text: "No", votes: 3}
-            poll.options = [];
-            poll.options.push(option1)
-            poll.options.push(option2)
-        })
-    }, [getTrends])
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
+        if(logged) {
+            fetchTrendsPolls();
+        }
+    }, [logged])
 
     return (<div>
         <InternalHeader />
@@ -65,13 +64,14 @@ export default function Polls(): React.ReactNode {
                     <MyLabel label="As enquetes mais populares do momento."></MyLabel>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 w-full max-w-7xl">
-                    {trendsPolls.map((poll: PollType) => (
+                    {trendsPolls.map((poll: PollType, index: number) => (
                         <Poll
+                            key={index}
+                            id={poll.id}
                             owner={poll.owner}
                             title={poll.title}
                             description={poll.description}
-                            options={poll.options}
-                        />
+                            options={[{ id: "1", text: "Yes", votes: 5 }, { id: "2", text: "No", votes: 3 }]}/>
                     ))}
                 </div>
             </section>
