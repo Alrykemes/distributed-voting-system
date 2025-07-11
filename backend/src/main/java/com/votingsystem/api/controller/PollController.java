@@ -56,6 +56,7 @@ public class PollController {
         return ResponseEntity.ok(new PollResponseDto(poll));
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<PollResponseDto> delete(
             Authentication authentication,

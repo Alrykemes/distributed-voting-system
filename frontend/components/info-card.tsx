@@ -1,5 +1,5 @@
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { ReactElement, SVGProps } from "react";
 
 interface InfoCardProps {
     icon: React.ReactElement<React.SVGProps<SVGElement>>;
@@ -7,8 +7,8 @@ interface InfoCardProps {
     content: string;
 }
 
-export function InfoCard({ icon, title, content }: InfoCardProps) {
-    const styledIcon = React.cloneElement(icon, {
+export function InfoCard({ icon, title, content }: InfoCardProps): React.ReactNode {
+    const styledIcon: ReactElement<SVGProps<SVGElement>> = React.cloneElement(icon, {
         className: "h-10 w-10 text-primary mx-auto",
     });
 

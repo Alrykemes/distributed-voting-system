@@ -1,5 +1,6 @@
 package com.votingsystem.api.domain.poll;
 
+
 import com.votingsystem.api.domain.user.User;
 import lombok.*;
 import org.springframework.data.annotation.Id;

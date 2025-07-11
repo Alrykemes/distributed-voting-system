@@ -1,6 +1,7 @@
-import {Vote} from "lucide-react";
+import { Vote } from "lucide-react";
+import React from "react";
 
-export function Logo() {
+export function Logo(): React.ReactNode {
     return (
         <div className="flex items-center gap-2">
             <Vote className="h-8 w-8 text-primary"/>

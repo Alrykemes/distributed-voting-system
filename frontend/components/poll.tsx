@@ -1,6 +1,8 @@
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {Users} from "lucide-react";
-import {Label} from "@/components/label";
+"use client";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Users } from "lucide-react";
+import { MyLabel } from "@/components/my-label";
 import React from "react";
 
 interface PollOption {
@@ -29,9 +31,9 @@ export function Poll( { title, description, options }: PollProps): React.ReactNo
             <CardContent>
                 <div className="flex gap-2 items-center justify-end p-2">
                     <Users className="w-4 h-4"/>
-                    <Label label={String(totalVotes)}/>
+                    <MyLabel label={String(totalVotes)}/>
                 </div>
-                {options.map((option, index) => {
+                {options.map((option: PollOption, index: number): React.ReactNode => {
                     const percentage: number = totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0;
                     return (
                         <div

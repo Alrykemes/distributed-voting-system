@@ -1,15 +1,16 @@
 "use client";
 
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {Textarea} from "@/components/ui/textarea"
-import {InputFieldProps} from "@/components/form/input-field";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea"
+import { InputFieldProps } from "@/components/form/input-field";
+import React from "react";
 
 export function TextAreaField({
       control,
       name,
       label,
       placeholder,
-}: InputFieldProps) {
+}: InputFieldProps): React.ReactNode {
     return (
         <FormField
             control={control}

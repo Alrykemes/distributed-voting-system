@@ -1,4 +1,4 @@
-import {z} from "zod/v4"
+import { z } from "zod/v4"
 
 export const CreatePollSchema = z.object({
     title: z.string().trim().min(5, "O título não pode estar vazio").max(100),

@@ -1,22 +1,24 @@
 "use client";
 
-import {useCreatePollForm} from "@/hooks/useCreatePollForm";
-import {CreatePollSchemaType} from "@/types/create-poll";
-import {api} from "@/lib/api";
-import {useState} from "react";
-import {toast} from "sonner"
-import FormWrapper from "@/components/form/form-wrapper";
-import {InputField} from "@/components/form/input-field";
-import {TextAreaField} from "@/components/form/text-area-field";
-import {Button} from "@/components/ui/button";
-import {useFieldArray} from "react-hook-form";
-import {Label} from "@/components/label";
-import {PollOptionField} from "@/components/form/poll-option-field";
-import {Plus} from "lucide-react";
 
-export function CreatePollForm() {
+import { useCreatePollForm } from "@/hooks/useCreatePollForm";
+import { CreatePollSchemaType } from "@/types/create-poll";
+import { api } from "@/lib/api";
+import React, { useState } from "react";
+import { toast } from "sonner"
+import FormWrapper from "@/components/form/form-wrapper";
+import { InputField } from "@/components/form/input-field";
+import { TextAreaField } from "@/components/form/text-area-field";
+import { Button } from "@/components/ui/button";
+import {useFieldArray, UseFormReturn } from "react-hook-form";
+import { MyLabel } from "@/components/my-label";
+import { PollOptionField } from "@/components/form/poll-option-field";
+import { Plus } from "lucide-react";
+
+export function CreatePollForm(): React.ReactNode {
     const [isLoading, setIsLoading] = useState(false);
-    const form = useCreatePollForm();
+    
+    const form: UseFormReturn<CreatePollSchemaType> = useCreatePollForm();
 
     const { control } = form;
 
@@ -49,11 +51,12 @@ export function CreatePollForm() {
             <TextAreaField control={form.control} name="description" label="Descrição (Opcional)"
                            placeholder="Adione mais contexto a sua enquete."/>
             <div className="space-y-4">
-                <Label label="Opções"/>
-                {fields.map((field, index) => (
-                    <PollOptionField control={form.control}
+                <MyLabel label="Opções"/>
+                {fields.map((field, index: number): React.ReactNode => (
+                    <PollOptionField
+                        control={form.control}
                         index={index}
-                        onRemoveAction={() => remove(index)}
+                        onRemoveAction={(): void => remove(index)}
                         disableRemove={fields.length <= 2}
                     />
                 ))}
@@ -61,7 +64,7 @@ export function CreatePollForm() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => append({ text: "" })}
+                    onClick={(): void => append({ text: "" })}
                     disabled={fields.length >= 4}
                     className="gap-2"
                 >

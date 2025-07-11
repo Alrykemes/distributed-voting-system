@@ -1,10 +1,17 @@
 "use client";
 
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
-import {Control, Path} from "react-hook-form";
+import {
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Control, Path } from "react-hook-form";
 import React from "react";
-import {CreatePollSchemaType} from "@/types/create-poll";
+import { CreatePollSchemaType } from "@/types/create-poll";
 
 export interface InputFieldProps {
     control: Control<CreatePollSchemaType>;
@@ -21,7 +28,7 @@ export function InputField({
      label,
      placeholder,
      type = "text",
-    maxLength = 50
+     maxLength = 50
 }: InputFieldProps) {
     return (
         <FormField

@@ -1,9 +1,10 @@
 "use client";
 
-import {Header} from "@/components/header/header";
-import {InfoCard} from "@/components/info-card";
-import {BarChart3, LogIn, Users, Vote} from "lucide-react";
-import {Button} from "@/components/ui/button";
+import { Header } from "@/components/header/header";
+import { InfoCard } from "@/components/info-card";
+import { BarChart3, LogIn, Users, Vote } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 import Link from "next/link";
 
 export default function Home() {
