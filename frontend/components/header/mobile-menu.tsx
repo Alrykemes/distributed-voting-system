@@ -15,7 +15,8 @@ export function MobileMenu() {
     const router: AppRouterInstance = useRouter();
 
     const handleLogout: () => void = (): void => {
-        router.push("/");
+        localStorage.removeItem("auth-token");
+        router.push("http://localhost:8080/logout");
     }
 
     return (
@@ -52,7 +53,7 @@ export function MobileMenu() {
                     </div>
                     <div className="text-center space-y-2">
                         <MyLabel label="Logout"/>
-                        <LogoutButton onLogoutAction={handleLogout}/>
+                            <LogoutButton onLogoutAction={handleLogout}/>
                     </div>
                 </div>
             </SheetContent>

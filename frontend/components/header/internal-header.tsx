@@ -14,7 +14,8 @@ export function InternalHeader(): React.ReactNode {
     const router: AppRouterInstance = useRouter();
 
     const handleLogout: () => void = (): void => {
-        router.push("/");
+        localStorage.removeItem("auth-token");
+        router.push("http://localhost:8080/logout");
     }
 
     return (
