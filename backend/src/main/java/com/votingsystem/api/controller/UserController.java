@@ -1,6 +1,7 @@
 package com.votingsystem.api.controller;
 
 import com.votingsystem.api.domain.user.User;
+import com.votingsystem.api.domain.user.UserResponseDto;
 import com.votingsystem.api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,9 @@ public class UserController {
     private final UserService userService;
 
     @DeleteMapping()
-    public ResponseEntity<User> deleteUser(Authentication authentication) {
+    public ResponseEntity<UserResponseDto> deleteUser(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         userService.deleteUser(user);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(new UserResponseDto(user));
     }
 }

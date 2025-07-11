@@ -8,8 +8,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PollType } from "@/types/poll";
 import { api } from "@/lib/api";
-import { PollOption } from "@/types/optionPoll";
-import { tr } from "zod/v4/locales";
 
 export default function Polls(): React.ReactNode {
 

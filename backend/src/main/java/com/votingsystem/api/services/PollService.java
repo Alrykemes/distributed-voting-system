@@ -7,12 +7,10 @@ import com.votingsystem.api.exception.PollNotFoundException;
 import com.votingsystem.api.exception.UnauthorizedActionException;
 import com.votingsystem.api.repository.PollRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 import com.votingsystem.api.domain.poll.PollOption;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,19 +21,8 @@ public class PollService {
     public Poll createPoll(User user, PollRequestDto pollRequest) {
         Poll poll = new Poll();
         poll.setCreatedAt(LocalDateTime.now());
-        poll.setOwner(user);
+        poll.setUser(user);
         return savePoll(poll, pollRequest);
-    }
-
-    public List<Poll> getTrends() {
-        List<Poll> polls = new ArrayList<Poll>();
-        polls.addAll(pollRepository.findTop3ByOrderByPositiveNumberOfVotesAsc());
-        polls.addAll(pollRepository.findTop3ByOrderByNegativeNumberOfVotesAsc());
-        return polls;
-    }
-
-    public List<Poll> getByTitle(String title) {
-        return pollRepository.findAllByTitleLikeIgnoreCase(title, Limit.of(10));
     }
 
     public List<Poll> getAllPolls() {
@@ -44,6 +31,10 @@ public class PollService {
 
     public Poll getPollById(String id) {
         return findOrThrow(id);
+    }
+
+    public List<Poll> getAllPollsById(String userId) {
+        return pollRepository.findAllById(userId);
     }
 
     public Poll updatePoll(User user, String id, PollRequestDto pollRequest) {
@@ -77,7 +68,7 @@ public class PollService {
     }
 
     private void userIsAuthorized(User user, Poll poll) {
-        if (!poll.getOwner().getId().equals(user.getId())) {
+        if (!poll.getUser().getId().equals(user.getId())) {
             throw new UnauthorizedActionException();
         }
     }

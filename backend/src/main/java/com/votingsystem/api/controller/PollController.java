@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/polls")
 @RequiredArgsConstructor
 public class PollController {
-    private final PollService service;
+    private final PollService pollService;
 
     @PostMapping()
     public ResponseEntity<PollResponseDto> createPoll(
@@ -27,7 +27,7 @@ public class PollController {
             @RequestBody @Valid PollRequestDto createRequest
     ) {
         User user = (User) authentication.getPrincipal();
-        Poll poll = service.createPoll(user, createRequest);
+        Poll poll = pollService.createPoll(user, createRequest);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}").buildAndExpand(poll.getId())
@@ -37,13 +37,20 @@ public class PollController {
 
     @GetMapping()
     public ResponseEntity<List<PollResponseDto>> getAllPolls() {
-        List<PollResponseDto> polls = service.getAllPolls().stream().map(PollResponseDto::new).toList();
+        List<PollResponseDto> polls = pollService.getAllPolls().stream().map(PollResponseDto::new).toList();
         return ResponseEntity.ok(polls);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PollResponseDto> getPollById(@PathVariable String id) {
-        return ResponseEntity.ok(new PollResponseDto(service.getPollById(id)));
+        return ResponseEntity.ok(new PollResponseDto(pollService.getPollById(id)));
+    }
+
+    @GetMapping("/{}")
+    public ResponseEntity<List<PollResponseDto>> getAllPollsById(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        List<PollResponseDto> polls = pollService.getAllPollsById(user.getId()).stream().map(PollResponseDto::new).toList();
+        return ResponseEntity.ok(polls);
     }
 
     @PutMapping("/{id}")
@@ -52,7 +59,7 @@ public class PollController {
             @PathVariable String id,
             @RequestBody @Valid PollRequestDto updateRequest) {
         User user = (User) authentication.getPrincipal();
-        Poll poll = service.updatePoll(user, id, updateRequest);
+        Poll poll = pollService.updatePoll(user, id, updateRequest);
         return ResponseEntity.ok(new PollResponseDto(poll));
     }
 
@@ -62,7 +69,7 @@ public class PollController {
             @PathVariable String id
     ) {
         User user = (User) authentication.getPrincipal();
-        Poll deletedPoll = service.deletePoll(user, id);
+        Poll deletedPoll = pollService.deletePoll(user, id);
         return ResponseEntity.ok(new PollResponseDto(deletedPoll));
     }
 }

@@ -18,7 +18,7 @@ public class Poll {
     @Id
     private String id;
 
-    private User owner;
+    private User user;
 
     private String title;
 
