@@ -8,9 +8,9 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface PollRepository extends MongoRepository<Poll, String> {
-    void deleteAllByOwner(UserPoll userPoll);
+import org.springframework.data.mongodb.repository.MongoRepository;
 
+public interface PollRepository extends MongoRepository<Poll, String> {}
     List<Poll> findAllByOwner(UserPoll owner);
 
     List<Poll> findAllByTitleLikeIgnoreCase(String title, Limit limit);
@@ -19,3 +19,4 @@ public interface PollRepository extends MongoRepository<Poll, String> {
 
     List<Poll> findTop3ByOrderByPositiveNumberOfVotesAsc();
 }
+

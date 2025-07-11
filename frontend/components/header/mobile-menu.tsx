@@ -27,7 +27,6 @@ export function MobileMenu() {
                 </Button>
             </SheetTrigger>
             <SheetContent className="p-6 flex flex-col min-h-full">
-
                 <SheetHeader className="flex flex-col items-center gap-2 border-b border-muted pb-4">
                     <SheetTitle>
                         <Vote className="w-6 h-6"/>
@@ -42,6 +41,7 @@ export function MobileMenu() {
                     </div>
                     <div className="space-y-2">
                         <MyLabel label="Criar enquete"/>
+
                         <CreatePollButton className="w-full"/>
                     </div>
                 </div>

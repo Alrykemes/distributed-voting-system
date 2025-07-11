@@ -1,137 +1,70 @@
 package com.votingsystem.api.controller;
 
-import com.votingsystem.api.domain.user.UserPoll;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.votingsystem.api.domain.poll.Poll;
 import com.votingsystem.api.domain.poll.PollRequestDto;
+import com.votingsystem.api.domain.poll.PollResponseDto;
+import com.votingsystem.api.domain.user.User;
 import com.votingsystem.api.services.PollService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
-@Controller()
+@RestController
 @RequestMapping("/polls")
 @RequiredArgsConstructor
 public class PollController {
-
     private final PollService service;
-    private final PollService pollService;
 
-    @GetMapping("/get-all")
-    public ResponseEntity<List<Poll>> getAllPolls() {
-        try {
-            return ResponseEntity.ok(service.getAll());
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @PostMapping()
+    public ResponseEntity<PollResponseDto> createPoll(
+            Authentication authentication,
+            @RequestBody @Valid PollRequestDto createRequest
+    ) {
+        User user = (User) authentication.getPrincipal();
+        Poll poll = service.createPoll(user, createRequest);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}").buildAndExpand(poll.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(new PollResponseDto(poll));
     }
 
-    @GetMapping("/get-my")
-    public ResponseEntity<List<Poll>> getMyPolls(Authentication authentication) {
-        try {
-            UserPoll user = (UserPoll) authentication.getPrincipal();
-            return ResponseEntity.ok(service.getByOwner(user));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @GetMapping("/get-trends")
-    public ResponseEntity<List<Poll>> getTrendsPolls() {
-        try {
-            return ResponseEntity.ok(service.getTrends());
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<Poll>> searchPollsByTitle(@Param("title") String title) {
-        try {
-            return ResponseEntity.ok(pollService.getByTitle(title));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @GetMapping()
+    public ResponseEntity<List<PollResponseDto>> getAll() {
+        List<PollResponseDto> polls = service.getAllPolls().stream().map(PollResponseDto::new).toList();
+        return ResponseEntity.ok(polls);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Poll> getPoll(@PathVariable String id) {
-        try {
-            Poll poll = service.getPollById(id);
-            return ResponseEntity.ok(poll);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<PollResponseDto> get(@PathVariable String id) {
+        return ResponseEntity.ok(new PollResponseDto(service.getPollById(id)));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Poll> createPoll(Authentication authentication, @RequestBody PollRequestDto dto) {
-        try {
-            UserPoll user = (UserPoll) authentication.getPrincipal();
-            Poll poll = service.createPoll(dto, user);
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(poll.getId())
-                    .toUri();
-            return ResponseEntity.created(location).body(poll);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<PollResponseDto> update(
+            Authentication authentication,
+            @PathVariable String id,
+            @RequestBody @Valid PollRequestDto updateRequest) {
+        User user = (User) authentication.getPrincipal();
+        Poll poll = service.updatePoll(user, id, updateRequest);
+        return ResponseEntity.ok(new PollResponseDto(poll));
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<Poll> updatePoll(Authentication authentication, @PathVariable String id, @RequestBody PollRequestDto dto) {
-        try {
-            UserPoll user = (UserPoll) authentication.getPrincipal();
-            Poll poll = service.updatePoll(id, dto, user);
-            return ResponseEntity.ok(poll);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Poll> deletePoll(@PathVariable String id) {
-        try {
-            Poll poll = service.delete(id);
-            return ResponseEntity.ok(poll);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<PollResponseDto> delete(
+            Authentication authentication,
+            @PathVariable String id
+    ) {
+        User user = (User) authentication.getPrincipal();
+        Poll deletedPoll = service.deletePoll(user, id);
+        return ResponseEntity.ok(new PollResponseDto(deletedPoll));
     }
 }

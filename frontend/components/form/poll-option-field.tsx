@@ -20,6 +20,7 @@ export function PollOptionField({
     onRemoveAction,
     disableRemove
 }: PollOptionFieldProps): React.ReactNode {
+
     const name = `options.${index}.text` as const;
 
     return (
