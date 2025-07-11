@@ -8,7 +8,7 @@ import Image from "next/image";
 import { PollOption } from "@/types/optionPoll";
 import { PollType } from "@/types/poll";
 
-export function Poll({ title, description, options, owner }: PollType): React.ReactNode {
+export function Poll({ title, description, options, ownerName, ownerPhoto }: PollType): React.ReactNode {
     const totalVotes: number = options.reduce((acc: number, option: PollOption): number => {
         return acc + option.votes;
     }, 0);
@@ -17,13 +17,13 @@ export function Poll({ title, description, options, owner }: PollType): React.Re
         <Card>
             <CardHeader>
                 <div className="mb-4 flex flex-row justify-between items-center">
-                    <h3>{owner.name}</h3>
+                    <h3>{ownerName}</h3>
                     <Image
-                        src={owner.picture}
+                        src={ownerPhoto}
                         className="object-cover rounded-xl"
                         width={46}
                         height={46}
-                        alt={owner.name + " Photo"} />
+                        alt={ownerName + " Photo"} />
                 </div>
                 <CardTitle>{title}</CardTitle>
                 {description && <CardDescription>{description}</CardDescription>}

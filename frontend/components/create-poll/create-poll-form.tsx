@@ -30,7 +30,14 @@ export function CreatePollForm(): React.ReactNode {
     async function onSubmit(data: CreatePollSchemaType): Promise<void> {
         try {
             setIsLoading(true);
-            const response = await api.post("polls/create", data)
+            const stringOptions: string[] = [];
+            data.options.map((text) => stringOptions.push(text.text))
+            const response = await api.post("/polls", {
+                title: data.title,
+                description: data.description,
+                options: stringOptions
+            })
+            console.log(response)
             if (response.status === 201) {
                 toast.success("Enquete criada com sucesso");
                 form.reset();
@@ -38,6 +45,7 @@ export function CreatePollForm(): React.ReactNode {
                 toast.error("Ocorreu um erro ao criar sua enquete");
             }
         } catch (error) {
+            console.log(error)
             toast.error("Erro inesperado");
         } finally {
             setIsLoading(false);
@@ -55,6 +63,7 @@ export function CreatePollForm(): React.ReactNode {
                 {fields.map((field, index: number): React.ReactNode => (
                     <PollOptionField
                         control={form.control}
+                        key={index}
                         index={index}
                         onRemoveAction={(): void => remove(index)}
                         disableRemove={fields.length <= 2}
