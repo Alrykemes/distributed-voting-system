@@ -20,3 +20,4 @@ public record PollRequestDto(
         @PollOptionsConstraint
         List<String> options
 ) {}
+

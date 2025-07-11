@@ -1,53 +1,78 @@
+"use client";
 
 import { InternalHeader } from "@/components/header/internal-header";
 import { Poll } from "@/components/poll";
 import { TrendingUp } from "lucide-react";
 import { MyLabel } from "@/components/my-label";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { PollType } from "@/types/poll";
+import { api } from "@/lib/api";
+import { PollOption } from "@/types/optionPoll";
+import { tr } from "zod/v4/locales";
 
 export default function Polls(): React.ReactNode {
+
+    const searchParams = useSearchParams();
+    const queryToken = searchParams.get('token');
+    const router = useRouter();
+    
+    const [logged, setLogged] = useState<boolean>(false);
+    const isFirstRender = useRef(true)
+    
+    useEffect(() => {
+        if (queryToken) {
+            localStorage.setItem("auth-token", queryToken);
+            router.replace('/polls', undefined);
+            setLogged(true);
+        }
+        
+        const storageToken = localStorage.getItem('auth-token');
+
+        if (!storageToken) {
+            router.push("/");
+        } else {
+            setLogged(true);
+        }
+    }, [router])
+
+    const [trendsPolls, setTrendsPolls] = useState<PollType[]>([]);
+
+    const fetchTrendsPolls = async () => {
+        const res = await api.get("/polls/get-trends")
+        setTrendsPolls(res.data);
+    }
+
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
+        if(logged) {
+            fetchTrendsPolls();
+        }
+    }, [logged])
+
     return (<div>
-        <InternalHeader/>
+        <InternalHeader />
         <main>
-            <section className="px-8 py-10 ">
+            <section className="px-8 py-10 flex flex-col items-center justify-center">
                 <div className="flex items-center gap-3 mb-6">
-                    <TrendingUp className="h-6 w-6 text-green-500"/>
+                    <TrendingUp className="h-6 w-6 text-green-500" />
                     <h2 className="text-2xl font-bold text-foreground">Mais Populares</h2>
                     <MyLabel label="As enquetes mais populares do momento."></MyLabel>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full max-w-7xl">
-                    <Poll title="Devemos implementar trabalho remoto permanente?"
-                          description="Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote.  Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote.
-                       Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote."
-                          options={["teste1", "teste2", "teste3"]}
-                    />
-                    <Poll title="Devemos implementar trabalho remoto permanente?"
-                          description="Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote.  Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote.
-                       Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote."
-                          options={["teste1", "teste2", "teste3"]}
-                    />
-                    <Poll title="Devemos implementar trabalho remoto permanente?"
-                          description="Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote.  Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote.
-                       Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote."
-                          options={["teste1", "teste2", "teste3"]}
-                    />
-                    <Poll title="Devemos implementar trabalho remoto permanente?"
-                          description="Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote.  Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote.
-                       Sendo a internet o maior meio de comunição, entretenimento,
-                       etc, se faz necessário uma migração para o trbalho remote."
-                          options={["teste1", "teste2", "teste3"]}
-                    />
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 w-full max-w-7xl">
+                    {trendsPolls.map((poll: PollType, index: number) => (
+                        <Poll
+                            key={index}
+                            id={poll.id}
+                            owner={poll.owner}
+                            title={poll.title}
+                            description={poll.description}
+                            options={[{ id: "1", text: "Yes", votes: 5 }, { id: "2", text: "No", votes: 3 }]}/>
+                    ))}
                 </div>
             </section>
         </main>
