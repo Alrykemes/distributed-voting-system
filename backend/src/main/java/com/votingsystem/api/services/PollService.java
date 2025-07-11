@@ -6,8 +6,10 @@ import com.votingsystem.api.domain.user.UserPoll;
 import com.votingsystem.api.repository.PollRepository;
 import com.votingsystem.api.repository.UserPollRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +20,21 @@ public class PollService {
 
     public List<Poll> getAll() {
         return pollRepository.findAll();
+    }
+
+    public List<Poll> getTrends() {
+        List<Poll> polls = new ArrayList<Poll>();
+        polls.addAll(pollRepository.findTop3ByOrderByPositiveNumberOfVotesAsc());
+        polls.addAll(pollRepository.findTop3ByOrderByNegativeNumberOfVotesAsc());
+        return polls;
+    }
+
+    public List<Poll> getByTitle(String title) {
+        return pollRepository.findAllByTitleLikeIgnoreCase(title, Limit.of(10));
+    }
+
+    public List<Poll> getByOwner(UserPoll owner) {
+        return pollRepository.findAllByOwner(owner);
     }
 
     public Poll createPoll(PollRequestDto dto, UserPoll user) throws Exception {

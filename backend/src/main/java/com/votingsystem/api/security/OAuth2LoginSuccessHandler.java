@@ -52,7 +52,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // Colocar uma Env Aqui
         // Redireciona para o frontend com o token na query string
-        String redirectUrl = "http://localhost:3000/login/success?token=" + token;
+        String redirectUrl = "http://localhost:3000/polls?token=" + token;
 
         response.sendRedirect(redirectUrl);
     }

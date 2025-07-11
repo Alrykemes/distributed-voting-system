@@ -2,6 +2,8 @@ package com.votingsystem.api.controller;
 
 import com.votingsystem.api.domain.user.UserPoll;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,12 +25,49 @@ import java.util.List;
 public class PollController {
 
     private final PollService service;
+    private final PollService pollService;
 
-    @GetMapping()
+    @GetMapping("/get-all")
     public ResponseEntity<List<Poll>> getAllPolls() {
         try {
-            List<Poll> polls = service.getAll();
-            return ResponseEntity.ok(polls);
+            return ResponseEntity.ok(service.getAll());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/get-my")
+    public ResponseEntity<List<Poll>> getMyPolls(Authentication authentication) {
+        try {
+            UserPoll user = (UserPoll) authentication.getPrincipal();
+            return ResponseEntity.ok(service.getByOwner(user));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/get-trends")
+    public ResponseEntity<List<Poll>> getTrendsPolls() {
+        try {
+            return ResponseEntity.ok(service.getTrends());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Poll>> searchPollsByTitle(@Param("title") String title) {
+        try {
+            return ResponseEntity.ok(pollService.getByTitle(title));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
