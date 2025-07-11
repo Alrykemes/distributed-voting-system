@@ -1,7 +1,7 @@
 package com.votingsystem.api.security;
 
-import com.votingsystem.api.domain.user.UserPoll;
-import com.votingsystem.api.repository.UserPollRepository;
+import com.votingsystem.api.domain.user.User;
+import com.votingsystem.api.repository.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +17,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final UserPollRepository userPollRepository;
+    private final UserRepository userPollRepository;
     private final JwtService jwtService;
 
     @Override
@@ -39,7 +39,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                     userPollRepository.save(user);
                 },
                 () -> {
-                    UserPoll newUser = new UserPoll();
+                    User newUser = new User();
                     newUser.setGoogleId(googleId);
                     newUser.setName(name);
                     newUser.setEmail(email);

@@ -1,6 +1,5 @@
 package com.votingsystem.api.controller;
 
-
 import com.votingsystem.api.domain.poll.Poll;
 import com.votingsystem.api.domain.poll.PollRequestDto;
 import com.votingsystem.api.domain.poll.PollResponseDto;
@@ -37,18 +36,18 @@ public class PollController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<PollResponseDto>> getAll() {
+    public ResponseEntity<List<PollResponseDto>> getAllPolls() {
         List<PollResponseDto> polls = service.getAllPolls().stream().map(PollResponseDto::new).toList();
         return ResponseEntity.ok(polls);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PollResponseDto> get(@PathVariable String id) {
+    public ResponseEntity<PollResponseDto> getPollById(@PathVariable String id) {
         return ResponseEntity.ok(new PollResponseDto(service.getPollById(id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PollResponseDto> update(
+    public ResponseEntity<PollResponseDto> updatePoll(
             Authentication authentication,
             @PathVariable String id,
             @RequestBody @Valid PollRequestDto updateRequest) {
@@ -57,9 +56,8 @@ public class PollController {
         return ResponseEntity.ok(new PollResponseDto(poll));
     }
 
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<PollResponseDto> delete(
+    public ResponseEntity<PollResponseDto> deletePoll(
             Authentication authentication,
             @PathVariable String id
     ) {
@@ -68,3 +66,4 @@ public class PollController {
         return ResponseEntity.ok(new PollResponseDto(deletedPoll));
     }
 }
+

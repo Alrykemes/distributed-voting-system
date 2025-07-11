@@ -1,6 +1,6 @@
 package com.votingsystem.api.security;
 
-import com.votingsystem.api.repository.UserPollRepository;
+import com.votingsystem.api.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +20,7 @@ import java.util.List;
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserPollRepository userPollRepository;
+    private final UserRepository userPollRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
