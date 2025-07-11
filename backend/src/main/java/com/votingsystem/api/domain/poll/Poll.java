@@ -1,12 +1,13 @@
 package com.votingsystem.api.domain.poll;
 
-import com.votingsystem.api.domain.user.UserPoll;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import com.votingsystem.api.domain.user.User;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,11 +15,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document(collection = "polls")
 public class Poll {
-    @Id()
+    @Id
     private String id;
+
+    private User owner;
+
     private String title;
+
     private String description;
-    private UserPoll owner;
-    private Long positiveNumberOfVotes;
-    private Long negativeNumberOfVotes;
+
+    private List<PollOption> options;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }

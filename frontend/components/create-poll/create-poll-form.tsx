@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useCreatePollForm } from "@/hooks/useCreatePollForm";
 import { CreatePollSchemaType } from "@/types/create-poll";
 import { api } from "@/lib/api";
@@ -16,6 +17,7 @@ import { Plus } from "lucide-react";
 
 export function CreatePollForm(): React.ReactNode {
     const [isLoading, setIsLoading] = useState(false);
+    
     const form: UseFormReturn<CreatePollSchemaType> = useCreatePollForm();
 
     const { control } = form;

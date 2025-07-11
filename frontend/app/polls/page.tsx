@@ -1,3 +1,4 @@
+
 import { InternalHeader } from "@/components/header/internal-header";
 import { Poll } from "@/components/poll";
 import { TrendingUp } from "lucide-react";
