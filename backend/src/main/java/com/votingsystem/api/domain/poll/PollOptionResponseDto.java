@@ -1,11 +1,11 @@
 package com.votingsystem.api.domain.poll;
 
-public record PollOptionDto(
+public record PollOptionResponseDto(
     String id,
     String text,
     long votes
 ) {
-    public PollOptionDto(PollOption pollOption) {
+    public PollOptionResponseDto(PollOption pollOption) {
         this(pollOption.getId(), pollOption.getText(), pollOption.getVotes());
     }
 }

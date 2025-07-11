@@ -28,10 +28,7 @@ public class PollService {
     }
 
     public List<Poll> getTrends() {
-        List<Poll> polls = new ArrayList<Poll>();
-        polls.addAll(pollRepository.findTop3ByOrderByPositiveNumberOfVotesAsc());
-        polls.addAll(pollRepository.findTop3ByOrderByNegativeNumberOfVotesAsc());
-        return polls;
+        return pollRepository.findTop6ByTotalVotes();
     }
 
     public List<Poll> getByTitle(String title) {

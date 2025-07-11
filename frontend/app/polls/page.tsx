@@ -39,7 +39,7 @@ export default function Polls(): React.ReactNode {
     const [trendsPolls, setTrendsPolls] = useState<PollType[]>([]);
 
     const fetchTrendsPolls = async () => {
-        const res = await api.get("/polls/get-trends")
+        const res = await api.get("/polls/trends")
         setTrendsPolls(res.data);
     }
 
@@ -68,10 +68,12 @@ export default function Polls(): React.ReactNode {
                         <Poll
                             key={index}
                             id={poll.id}
-                            owner={poll.owner}
+                            ownerId={poll.ownerId}
+                            ownerName={poll.ownerName}
+                            ownerPhoto={poll.ownerPhoto}
                             title={poll.title}
                             description={poll.description}
-                            options={[{ id: "1", text: "Yes", votes: 5 }, { id: "2", text: "No", votes: 3 }]}/>
+                            options={poll.options}/>
                     ))}
                 </div>
             </section>

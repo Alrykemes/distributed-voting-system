@@ -41,6 +41,12 @@ public class PollController {
         return ResponseEntity.ok(polls);
     }
 
+    @GetMapping("/trends")
+    public ResponseEntity<List<PollResponseDto>> getTrendPolls() {
+        List<PollResponseDto> polls = service.getTrends().stream().map(PollResponseDto::new).toList();
+        return ResponseEntity.ok(polls);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PollResponseDto> getPollById(@PathVariable String id) {
         return ResponseEntity.ok(new PollResponseDto(service.getPollById(id)));

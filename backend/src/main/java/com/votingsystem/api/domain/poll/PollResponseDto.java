@@ -6,14 +6,17 @@ public record PollResponseDto(
         String ownerId,
         String ownerName,
         String ownerPhoto,
-        String description
+        String description,
+        PollOptionResponseDto[] options
 ) {
     public PollResponseDto(Poll poll) {
         this(poll.getId(),
-             poll.getTitle(),
-             poll.getOwner().getId(),
-             poll.getOwner().getName(),
-             poll.getOwner().getPicture(),
-             poll.getDescription());
+                poll.getTitle(),
+                poll.getOwner().getId(),
+                poll.getOwner().getName(),
+                poll.getOwner().getPicture(),
+                poll.getDescription(),
+                poll.getOptions().stream().map(PollOptionResponseDto::new).toArray(PollOptionResponseDto[]::new)
+        );
     }
 }
